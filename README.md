@@ -2,6 +2,14 @@
 
 This repository contains a Jenkins pipeline script (`Jenkinsfile`) for automating the build, testing, versioning, and deployment of the Weather App. It also utilizes GitOps with Argo CD for managing Kubernetes manifests.
 
+
+## Related Repositories
+
+- [Weather App](https://github.com/eilaytal/weather-app): The main repository containing the Weather App source code.
+- [Weather App EKS Terraform](https://github.com/eilaytal/weather-app-eks-terraform): Terraform configuration for deploying the Weather App on AWS EKS.
+- [GitOps Manifests](https://github.com/eilaytal/gitops-manifests): GitOps manifests for managing the deployment of the Weather App.
+
+
 ## Overview
 
 The Jenkins pipeline is designed to automate the following tasks:
