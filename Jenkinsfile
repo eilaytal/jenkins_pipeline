@@ -25,8 +25,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', passwordVariable: 'HUB_PASSWORD', usernameVariable: 'HUB_USERNAME')]) {
                     script {
                         sh 'echo $HUB_PASSWORD | docker login -u $HUB_USERNAME --password-stdin'
-                        sh 'docker tag eilaytal/weatherappsearchistory eilaytal/weatherappsearchistory:V1.$BUILD_NUMBER'
-                        sh 'docker push eilaytal/weatherappsearchistory:V1.$BUILD_NUMBER'
+                        sh 'docker tag eilaytal/weatherappsearchistory eilaytal/weatherappsearchistory:V1.${BUILD_NUMBER}' // Tagging with build number
+                        sh 'docker push eilaytal/weatherappsearchistory:V1.${BUILD_NUMBER}' // Pushing to DockerHub with build number
                     }
                 }
             }
@@ -36,24 +36,24 @@ pipeline {
             steps {
                 dir('git') {
                     script {
-                        sh 'rm -rf python-k8s-manifests' // Clean up any existing repository
+                        sh 'rm -rf gitops-manifests' // Clean up any existing repository
                         withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            sh 'git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/eilaytal/python-k8s-manifests.git'
+                            sh 'git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/eilaytal/gitops-manifests.git'
                             sh 'git config user.email "your_email@example.com"' // Configures Git user email
                             sh 'git config user.name "Your Name"' // Configures Git username
                         }
                     }
-                    dir('python-k8s-manifests/weatherapp_chart') {
+                    dir('gitops-manifests/weatherapp_chart') {
                         script {
                             sh 'ls -la' // Debugging step to list files and verify location
                             sh """
-                            sed -i 's/tag: .*/tag: "V1.${BUILD_NUMBER}"/' values.yaml
+                            sed -i 's/tag: .*/tag: "V1.${BUILD_NUMBER}"/' values.yaml // Updating image tag in values.yaml
                             """
                             sh 'cat values.yaml' // Outputs the contents of the file to verify the change
                             withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                                 sh 'git add values.yaml'
                                 sh 'git commit -m "Update deployment configuration to V1.${BUILD_NUMBER}"'
-                                sh 'git push'
+                                sh 'git push' // Pushing changes to GitHub
                             }
                         }
                     }
@@ -70,10 +70,10 @@ pipeline {
             }
         }
         success {
-            slackSend(channel: "#succeeded-build", color: "good", message: "Build #${env.BUILD_NUMBER} successful!")
+            slackSend(channel: "#succeeded-build", color: "good", message: "Build #${env.BUILD_NUMBER} successful!") // Success notification
         }
         failure {
-            slackSend(channel: "#devops-alerts", color: "danger", message: "Build #${env.BUILD_NUMBER} failed!")
+            slackSend(channel: "#devops-alerts", color: "danger", message: "Build #${env.BUILD_NUMBER} failed!") // Failure notification
         }
     }
 }
