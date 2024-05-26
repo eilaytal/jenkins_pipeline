@@ -12,7 +12,7 @@ The Jenkins pipeline is designed to automate the following tasks:
 4. **Clone and Update GIT Stage:** Clones a Git repository, updates a specific file with the new version tag, commits the changes, and pushes them back to the repository.
 5. **Post-Build Actions:** Stops and removes the Docker container used for testing and sends notifications to Slack channels based on the build status.
 
-In addition to Jenkins, this pipeline integrates with Argo CD for GitOps-style deployment of Kubernetes manifests stored in the `python-k8s-manifests` repository.
+In addition to Jenkins, this pipeline integrates with Argo CD for GitOps-style deployment of Kubernetes manifests stored in the `gitops-manifests` repository.
 
 ## Prerequisites
 
@@ -33,14 +33,13 @@ Before using the Jenkins pipeline and Argo CD, ensure you have the following:
 
 3. **Run the Pipeline:** Trigger the pipeline manually or set up webhooks to trigger it automatically on code changes.
 
-4. **GitOps Deployment:** Utilize Argo CD to manage deployments of Kubernetes manifests stored in the `python-k8s-manifests` repository. Ensure Argo CD is set up to monitor changes in the `python-k8s-manifests` repository and automatically sync deployments in the Kubernetes cluster.
+4. **GitOps Deployment:** Utilize Argo CD to manage deployments of Kubernetes manifests stored in the `gitops-manifests` repository. Ensure Argo CD is set up to monitor changes in the `gitops-manifests` repository and automatically sync deployments in the Kubernetes cluster.
 
 ## How it Works
 
 - The pipeline script (`Jenkinsfile`) defines stages for building Docker images, running tests, pushing images to Docker Hub, and updating version tags in a Git repository.
-- Argo CD continuously monitors the `python-k8s-manifests` repository for changes and automatically applies any modifications to the Kubernetes cluster, ensuring consistent and automated deployments.
+- Argo CD continuously monitors the `gitops-manifests` repository for changes and automatically applies any modifications to the Kubernetes cluster, ensuring consistent and automated deployments.
 
 ## Contributing
 
 If you find any issues or have suggestions for improvements, feel free to open an issue or create a pull request.
-
